@@ -9,8 +9,10 @@ import React from "react"
 import PropTypes from "prop-types"
 import { StaticQuery, graphql } from "gatsby"
 
+
 import Header from "./header"
 import "./layout.css"
+import StyledBackgroundSection from "./background";
 
 const Layout = ({ children }) => (
   <StaticQuery
@@ -27,7 +29,8 @@ const Layout = ({ children }) => (
       <>
         <Header siteTitle={data.site.siteMetadata.title} />
         <div>
-          <main>{children}
+          <main>
+          {children}
           </main>
           <footer>
             © {new Date().getFullYear()}, Built with
