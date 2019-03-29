@@ -12,7 +12,6 @@ import { StaticQuery, graphql, Link } from "gatsby"
 
 import Header from "./header"
 import "./layout.css"
-import StyledBackgroundSection from "./background";
 
 const Layout = ({ children }) => (
   <StaticQuery
