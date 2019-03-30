@@ -117,11 +117,8 @@ class Canvas extends React.Component {
 
       ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
-
-      const image = document.getElementById('source');
-      new DragUfo(ctx, image);
-
       ctx.font = "10vw Arial"
+      ctx.strokeStyle = "#000d1a";
       ctx.textAlign = "center"
       ctx.strokeText(
         "SPACE EXPLORER",
@@ -132,9 +129,13 @@ class Canvas extends React.Component {
       this.state.circleArray.forEach(element => {
         element.update(ctx)
       })
+
+    const image = document.getElementById('source');
+    new DragUfo(ctx, image);
     }
 
     animate()
+
   }
 
   render() {
