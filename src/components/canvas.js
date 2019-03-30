@@ -16,13 +16,13 @@ window.addEventListener("mousemove", event => {
   mouse.x = event.x
   mouse.y = event.y
 
-    ufoPosition.x = mouse.x
-    ufoPosition.y = mouse.y
+    ufoPosition.x = mouse.x 
+    ufoPosition.y = mouse.y 
 })
 
 
 function DragUfo(ctx, image) {
-  ctx.drawImage(image, ufoPosition.x, ufoPosition.y, image.height / 6, image.width / 6);
+  ctx.drawImage(image, ufoPosition.x - (image.width / 12), ufoPosition.y - (image.height / 12), image.height / 6, image.width / 6);
 }
 
 
@@ -84,7 +84,7 @@ class Canvas extends React.Component {
     super(props)
 
     this.state = {
-      circleArray: Array.from({ length: 800 }).map(
+      circleArray: Array.from({ length: 1800 }).map(
         () =>
           new Circle(
             Math.random() * (window.innerWidth - 10 * 2) + 10,
@@ -120,8 +120,6 @@ class Canvas extends React.Component {
 
       const image = document.getElementById('source');
       new DragUfo(ctx, image);
-
-      // ctx.drawImage(image, this.refs.canvas.width / 2, this.refs.canvas.height / 2, image.height / 6, image.width / 6);
 
       ctx.font = "10vw Arial"
       ctx.textAlign = "center"
