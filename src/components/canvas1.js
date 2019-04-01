@@ -91,7 +91,7 @@ class Canvas extends React.Component {
             Math.random() * (window.innerHeight - 10 * 2) + 10,
             Math.random() - 0.5,
             Math.random() - 0.5,
-            Math.random() * 3 + 1,
+            Math.random() * 2 + 1,
             colorArray[Math.floor(Math.random() * colorArray.length)]
           )
       ),
