@@ -1,6 +1,7 @@
 import React from "react"
 import ufo from "../images/ufo.png"
-import comet from "../images/comet.png"
+import fallingStar from "../images/comet.png"
+import comet from "../images/bigComet.png"
 
 let mouse = {
   x: undefined,
@@ -30,8 +31,8 @@ function DragUfo(ctx, image) {
 
 const preShake = (ctx) => {
   ctx.save();
-  let dx = Math.random()*3;
-  let dy = Math.random()*3;
+  let dx = Math.random()*4;
+  let dy = Math.random()*4;
   ctx.translate(dx, dy);  
 }
 const postShake = (ctx) => {
@@ -45,14 +46,34 @@ function Comet(x, y) {
     comet,
     x,
     y,
-    comet.height / 13,
-    comet.width / 8
+    comet.height / 18,
+    comet.width / 6
       )
     }
 
-    this.fall = (comet, ctx) => {
-      y += 10
+    this.cometFall = (comet, ctx) => {
+      y += 16
       drawComet(comet, ctx)
+    }
+
+}
+
+
+function StarFall(x, y) {
+
+  const drawFallingStar = (fallingStar, ctx) => {
+    ctx.drawImage(
+    fallingStar,
+    x,
+    y,
+    fallingStar.height / 20,
+    fallingStar.width / 8
+      )
+    }
+
+    this.fall = (fallingStar, ctx) => {
+      y += 14
+      drawFallingStar(fallingStar, ctx)
     }
 
 }
@@ -70,7 +91,7 @@ function Star(x, y, radius, color) {
 
   this.update = ctx => {
   
-      y += 10
+      y += 14
       draw(ctx)
   }
 }
@@ -88,6 +109,13 @@ class Canvas2 extends React.Component {
             2,
             "white"
           )
+      ),
+      starFallArray: Array.from({ length: 1 }).map(
+        () => 
+        new StarFall(
+          Math.random() * (window.innerWidth - 10 * 2) + 10,
+          -100
+        )
       ),
       cometArray: Array.from({ length: 1 }).map(
         () => 
@@ -121,13 +149,29 @@ class Canvas2 extends React.Component {
     }, 100)
 
     setInterval(() => {
+      this.state.starFallArray.push(
+        new StarFall(
+          Math.random() * (window.innerWidth - 10 * 2) + 10,
+          -100
+        )
+      )
+      this.state.starFallArray.push(
+        new StarFall(
+          Math.random() * (window.innerWidth - 10 * 2) + 10,
+          -100
+        )
+      )
+    }, 300)
+
+
+    setInterval(() => {
       this.state.cometArray.push(
         new Comet(
           Math.random() * (window.innerWidth - 10 * 2) + 10,
           -100
         )
       )
-    }, 300)
+    }, 500)
 
 
     this.updateCanvas()
@@ -156,11 +200,17 @@ class Canvas2 extends React.Component {
       const image = document.getElementById("source")
       new DragUfo(ctx, image)
 
+      const fallingStar = document.getElementById("fallingStar");
+
+      this.state.starFallArray.forEach(element => {
+        element.fall(fallingStar, ctx)
+      })
+
       const comet = document.getElementById("comet");
 
       this.state.cometArray.forEach(element => {
         preShake(ctx);
-        element.fall(comet, ctx)
+        element.cometFall(comet, ctx)
         postShake(ctx);
       })
 
@@ -183,6 +233,9 @@ class Canvas2 extends React.Component {
         />
         <div style={{ display: `none` }}>
           <img id={"source"} src={ufo} alt={"ufo"} />
+        </div>
+        <div style={{ display: `none` }}>
+          <img id={"fallingStar"} src={fallingStar} alt={"falling star"} />
         </div>
         <div style={{ display: `none` }}>
           <img id={"comet"} src={comet} alt={"comet"} />
