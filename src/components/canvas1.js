@@ -75,7 +75,6 @@ const colorArray = [
   "#bb99aa",
   "#8899aa",
   "#ffffff",
-  "ffeef5",
   "#aeeeee",
 ]
 
@@ -146,6 +145,19 @@ class Canvas extends React.Component {
         height={window.innerHeight}
         ref="canvas"
       />
+      <Link to="/page-2/" 
+      style={{
+        position: `absolute`,
+        top: `24em`,
+        right: `45%`,
+        color: `#000d1a`,
+        background: `#aeeeee`,
+        textDecoration: `none`,
+        fontFamily: `Arial`,
+        fontSize: `1.4em`,
+        padding: `0.8em`,
+        borderRadius: `5em`,
+      }}>PLAY</Link>
       <div style={{display: `none`}}>
       <img id={"source"}
           src={ufo}
