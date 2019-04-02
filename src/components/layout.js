@@ -31,14 +31,6 @@ const Layout = ({ children }) => (
           <main>
           {children}
           </main>
-          <footer 
-          style={{
-            textDecoration: `none`,
-            color: `black`,
-            background: `transparent`
-          }}>
-          <Link to="/page-2/">Go to page 2</Link>
-          </footer>
         </div>
       </>
     )}

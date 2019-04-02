@@ -18,6 +18,7 @@
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "react-helmet": "^5.2.0",
+    "reshake": "^1.1.6",
     "styled-components": "^4.2.0"
   },
   "devDependencies": {
