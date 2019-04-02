@@ -145,7 +145,7 @@ class Canvas extends React.Component {
         height={window.innerHeight}
         ref="canvas"
       />
-      <Link to="/page-2/" 
+      <Link to="/gamerules-page/" 
       style={{
         position: `absolute`,
         top: `24em`,
