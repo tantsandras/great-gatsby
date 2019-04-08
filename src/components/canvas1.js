@@ -2,68 +2,77 @@ import React from "react"
 import Background from "../images/space.jpg"
 import ufo from "../images/ufo.png"
 import { Link } from "gatsby"
+import { PlayLink } from "./styled"
 
 let mouse = {
   x: undefined,
   y: undefined,
 }
-    let ufoPosition = {
-      x: window.innerHeight / 2,
-      y: window.innerWidth /2 
-    }
+let ufoPosition = {
+  x: window.innerHeight / 2,
+  y: window.innerWidth / 2,
+}
 
 window.addEventListener("mousemove", event => {
   mouse.x = event.x
   mouse.y = event.y
 
-    ufoPosition.x = mouse.x 
-    ufoPosition.y = mouse.y 
+  ufoPosition.x = mouse.x
+  ufoPosition.y = mouse.y
 })
 
-
-function DragUfo(ctx, image) {
-  ctx.drawImage(image, ufoPosition.x - (image.width / 12), ufoPosition.y - (image.height / 12), image.height / 6, image.width / 6);
+class DragUfo {
+  constructor(ctx, image) {
+    ctx.drawImage(
+      image,
+      ufoPosition.x - image.width / 12,
+      ufoPosition.y - image.height / 12,
+      image.height / 6,
+      image.width / 6
+    )
+  }
 }
-
 
 const maxRadius = 20
 
-function Circle(x, y, dx, dy, radius, color) {
-  let minRadius = radius
+class Circle {
+  constructor(x, y, dx, dy, radius, color) {
+    let minRadius = radius
 
-  const draw = ctx => {
-    ctx.beginPath()
-    ctx.arc(x, y, radius, Math.PI * 2, false)
-    ctx.shadowBlur = 30
-    ctx.shadowColor = "white"
-    ctx.fillStyle = color
-    ctx.fill()
-  }
-
-  this.update = ctx => {
-    if (x + radius > window.innerWidth || x - radius < 0) {
-      dx = -dx
+    const draw = ctx => {
+      ctx.beginPath()
+      ctx.arc(x, y, radius, Math.PI * 2, false)
+      ctx.shadowBlur = 30
+      ctx.shadowColor = "white"
+      ctx.fillStyle = color
+      ctx.fill()
     }
-    if (y + radius > window.innerHeight || y - radius < 0) {
-      dy = -dy
-    }
-    x += dx
-    y += dy
 
-    if (
-      mouse.x - x < 50 &&
-      mouse.x - x > -50 &&
-      mouse.y - y < 50 &&
-      mouse.y - y > -50
-    ) {
-      if (radius < maxRadius) {
-        radius += 1
+    this.update = ctx => {
+      if (x + radius > window.innerWidth || x - radius < 0) {
+        dx = -dx
       }
-    } else if (radius > minRadius) {
-      radius -= 1
-    }
+      if (y + radius > window.innerHeight || y - radius < 0) {
+        dy = -dy
+      }
+      x += dx
+      y += dy
 
-    draw(ctx)
+      if (
+        mouse.x - x < 50 &&
+        mouse.x - x > -50 &&
+        mouse.y - y < 50 &&
+        mouse.y - y > -50
+      ) {
+        if (radius < maxRadius) {
+          radius += 1
+        }
+      } else if (radius > minRadius) {
+        radius -= 1
+      }
+
+      draw(ctx)
+    }
   }
 }
 
@@ -98,7 +107,6 @@ class Canvas extends React.Component {
   }
 
   componentDidMount() {
-
     this.refs.canvas.style.background = `url('${Background}') no-repeat center center fixed`
 
     this.updateCanvas()
@@ -108,16 +116,19 @@ class Canvas extends React.Component {
     this.updateCanvas()
   }
 
+  componentWillUnmount() {
+    this.animate = () => {}
+  }
+
   updateCanvas() {
-
-    const animate = () => {
+    this.animate = () => {
       const ctx = this.refs.canvas.getContext("2d")
-      requestAnimationFrame(animate)
+      requestAnimationFrame(() => this.animate())
 
-      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
 
       ctx.font = "10vw Arial"
-      ctx.strokeStyle = "#000d1a";
+      ctx.strokeStyle = "#000d1a"
       ctx.textAlign = "center"
       ctx.strokeText(
         "SPACE EXPLORER",
@@ -129,42 +140,29 @@ class Canvas extends React.Component {
         element.update(ctx)
       })
 
-    const image = document.getElementById('source');
-    new DragUfo(ctx, image);
+      const image = document.getElementById("source")
+      new DragUfo(ctx, image)
     }
 
-    animate()
-
+    this.animate()
   }
 
   render() {
     return (
       <div>
-      <canvas
-        width={window.innerWidth}
-        height={window.innerHeight}
-        ref="canvas"
-      />
-      <Link to="/gamerules-page/" 
-      style={{
-        position: `absolute`,
-        top: `24em`,
-        right: `45%`,
-        color: `#000d1a`,
-        background: `#aeeeee`,
-        textDecoration: `none`,
-        fontFamily: `Arial`,
-        fontSize: `1.4em`,
-        padding: `0.8em`,
-        borderRadius: `5em`,
-      }}>PLAY</Link>
-      <div style={{display: `none`}}>
-      <img id={"source"}
-          src={ufo}
-          alt={"ufo"}
-          />
-    </div>
-    </div>
+        <Link
+          to="/gamerules-page/">
+          <PlayLink>Play</PlayLink>
+        </Link>
+        <canvas
+          width={window.innerWidth}
+          height={window.innerHeight}
+          ref="canvas"
+        />
+        <div style={{ display: `none` }}>
+          <img id={"source"} src={ufo} alt={"ufo"} />
+        </div>
+      </div>
     )
   }
 }
