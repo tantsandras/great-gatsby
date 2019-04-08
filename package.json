@@ -15,11 +15,11 @@
     "gatsby-plugin-sharp": "^2.0.30",
     "gatsby-source-filesystem": "^2.0.27",
     "gatsby-transformer-sharp": "^2.1.17",
+    "module": "^1.2.5",
     "prop-types": "^15.7.2",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "react-helmet": "^5.2.0",
-    "reshake": "^1.1.6",
     "styled-components": "^4.2.0"
   },
   "devDependencies": {

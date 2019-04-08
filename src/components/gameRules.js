@@ -29,8 +29,8 @@ class GameModal extends React.Component {
     )
     return (
       <div
-        width={window.innerWidth}
-        height={window.innerHeight}
+        // width={window.innerWidth}
+        // height={window.innerHeight}
         style={{ background: `black` }}
       >
         <div className="rules">{modal}</div>

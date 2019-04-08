@@ -7,24 +7,13 @@ let mouse = {
   x: undefined,
   y: undefined,
 }
-let ufoPosition = {
-  x: window.innerHeight / 2,
-  y: window.innerWidth / 2,
-}
-window.addEventListener("mousemove", event => {
-  mouse.x = event.x
-  mouse.y = event.y
-
-  ufoPosition.x = mouse.x
-  ufoPosition.y = mouse.y
-})
 
 class DragUfo {
   constructor(ctx, image) {
     ctx.drawImage(
       image,
-      ufoPosition.x - image.width / 12,
-      ufoPosition.y - image.height / 12,
+      mouse.x - image.width / 12,
+      mouse.y - image.height / 12,
       image.height / 6,
       image.width / 6
     )
@@ -109,6 +98,24 @@ class Canvas2 extends React.Component {
 
     this.state = {
       gameover: false,
+      starArray: [],
+      starFallArray: [],
+      cometArray: [],
+      pointCounter: 0,
+      width: undefined,
+      height: undefined
+    }
+
+    this.onMouseMove = event => {
+      mouse.x = event.x
+      mouse.y = event.y
+    }
+  }
+
+  componentDidMount() {
+    window.addEventListener("mousemove", this.onMouseMove)
+
+    this.setState({
       starArray: Array.from({ length: 15 }).map(
         () =>
           new Star(
@@ -125,11 +132,10 @@ class Canvas2 extends React.Component {
       cometArray: Array.from({ length: 1 }).map(
         () => new Comet(Math.random() * (window.innerWidth - 10 * 2) + 10, -100)
       ),
-      pointCounter: 0,
-    }
-  }
+      width: window.innerWidth,
+      height: window.innerHeight
+    })
 
-  componentDidMount() {
     const stars = setInterval(() => {
       this.state.starArray.push(
         new Star(
@@ -184,6 +190,10 @@ class Canvas2 extends React.Component {
 
   componentDidUpdate() {
     this.updateCanvas()
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("mousemove", this.onMouseMove)
   }
 
   updateCanvas(stars, fall, comets, points) {
@@ -298,8 +308,8 @@ class Canvas2 extends React.Component {
     return (
       <div>
         <canvas
-          width={window.innerWidth}
-          height={window.innerHeight}
+          width={this.state.width}
+          height={this.state.height}
           ref="canvas"
           style={{ background: `black` }}
         />

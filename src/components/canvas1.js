@@ -8,25 +8,13 @@ let mouse = {
   x: undefined,
   y: undefined,
 }
-let ufoPosition = {
-  x: window.innerHeight / 2,
-  y: window.innerWidth / 2,
-}
-
-window.addEventListener("mousemove", event => {
-  mouse.x = event.x
-  mouse.y = event.y
-
-  ufoPosition.x = mouse.x
-  ufoPosition.y = mouse.y
-})
 
 class DragUfo {
   constructor(ctx, image) {
     ctx.drawImage(
       image,
-      ufoPosition.x - image.width / 12,
-      ufoPosition.y - image.height / 12,
+      mouse.x - image.width / 12,
+      mouse.y - image.height / 12,
       image.height / 6,
       image.width / 6
     )
@@ -92,6 +80,23 @@ class Canvas extends React.Component {
     super(props)
 
     this.state = {
+      circleArray: [],
+      width: undefined,
+      height: undefined,
+    }
+
+    this.onMouseMove = event => {
+      mouse.x = event.x
+      mouse.y = event.y
+    }
+  }
+
+  componentDidMount() {
+    this.refs.canvas.style.background = `url('${Background}') no-repeat center center fixed`
+
+    window.addEventListener("mousemove", this.onMouseMove)
+
+    this.setState({
       circleArray: Array.from({ length: 1800 }).map(
         () =>
           new Circle(
@@ -103,11 +108,9 @@ class Canvas extends React.Component {
             colorArray[Math.floor(Math.random() * colorArray.length)]
           )
       ),
-    }
-  }
-
-  componentDidMount() {
-    this.refs.canvas.style.background = `url('${Background}') no-repeat center center fixed`
+      width: window.innerWidth,
+      height: window.innerHeight,
+    })
 
     this.updateCanvas()
   }
@@ -117,6 +120,8 @@ class Canvas extends React.Component {
   }
 
   componentWillUnmount() {
+    window.removeEventListener("mousemove", this.onMouseMove)
+
     this.animate = () => {}
   }
 
@@ -150,13 +155,12 @@ class Canvas extends React.Component {
   render() {
     return (
       <div>
-        <Link
-          to="/gamerules-page/">
+        <Link to="/gamerules-page/">
           <PlayLink>Play</PlayLink>
         </Link>
         <canvas
-          width={window.innerWidth}
-          height={window.innerHeight}
+          width={this.state.width}
+          height={this.state.height}
           ref="canvas"
         />
         <div style={{ display: `none` }}>
