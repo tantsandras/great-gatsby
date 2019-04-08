@@ -19,14 +19,16 @@ window.addEventListener("mousemove", event => {
   ufoPosition.y = mouse.y
 })
 
-function DragUfo(ctx, image) {
-  ctx.drawImage(
-    image,
-    ufoPosition.x - image.width / 12,
-    ufoPosition.y - image.height / 12,
-    image.height / 6,
-    image.width / 6
-  )
+class DragUfo {
+  constructor(ctx, image) {
+    ctx.drawImage(
+      image,
+      ufoPosition.x - image.width / 12,
+      ufoPosition.y - image.height / 12,
+      image.height / 6,
+      image.width / 6
+    )
+  }
 }
 
 const preShake = ctx => {
@@ -39,59 +41,65 @@ const postShake = ctx => {
   ctx.restore()
 }
 
-function Comet(x, y) {
-  const drawComet = (comet, ctx) => {
-    ctx.drawImage(comet, x, y, comet.height / 18, comet.width / 6)
-  }
+class Comet {
+  constructor(x, y) {
+    const drawComet = (comet, ctx) => {
+      ctx.drawImage(comet, x, y, comet.height / 18, comet.width / 6)
+    }
 
-  this.cometFall = (comet, ctx) => {
-    y += 16
-    drawComet(comet, ctx)
-  }
+    this.cometFall = (comet, ctx) => {
+      y += 12
+      drawComet(comet, ctx)
+    }
 
-  this.hitsShip = () => {
-    if (
-      mouse.x - x < 50 &&
-      mouse.x - x > -50 &&
-      mouse.y - y < 50 &&
-      mouse.y - y > -50
-    ) {
-      return true;
-      } 
-      return false;
-  }
-}
-
-function StarFall(x, y) {
-  const drawFallingStar = (fallingStar, ctx) => {
-    ctx.drawImage(
-      fallingStar,
-      x,
-      y,
-      fallingStar.height / 20,
-      fallingStar.width / 8
-    )
-  }
-
-  this.fall = (fallingStar, ctx) => {
-    y += 14
-    drawFallingStar(fallingStar, ctx)
+    this.hitsShip = () => {
+      if (
+        mouse.x - x < 50 &&
+        mouse.x - x > -50 &&
+        mouse.y - y < 50 &&
+        mouse.y - y > -50
+      ) {
+        return true
+      }
+      return false
+    }
   }
 }
 
-function Star(x, y, radius, color) {
-  const draw = ctx => {
-    ctx.beginPath()
-    ctx.arc(x, y, radius, Math.PI * 2, false)
-    ctx.shadowBlur = 100
-    ctx.shadowColor = "silver"
-    ctx.fillStyle = color
-    ctx.fill()
-  }
+class StarFall {
+  constructor(x, y) {
+    const drawFallingStar = (fallingStar, ctx) => {
+      ctx.drawImage(
+        fallingStar,
+        x,
+        y,
+        fallingStar.height / 20,
+        fallingStar.width / 8
+      )
+    }
 
-  this.update = ctx => {
-    y += 14
-    draw(ctx)
+    this.fall = (fallingStar, ctx) => {
+      y += 10
+      drawFallingStar(fallingStar, ctx)
+    }
+  }
+}
+
+class Star {
+  constructor(x, y, radius, color) {
+    const draw = ctx => {
+      ctx.beginPath()
+      ctx.arc(x, y, radius, Math.PI * 2, false)
+      ctx.shadowBlur = 100
+      ctx.shadowColor = "silver"
+      ctx.fillStyle = color
+      ctx.fill()
+    }
+
+    this.update = ctx => {
+      y += 10
+      draw(ctx)
+    }
   }
 }
 
@@ -110,18 +118,19 @@ class Canvas2 extends React.Component {
             "white"
           )
       ),
-      starFallArray: Array.from({ length: 1 }).map(
+      starFallArray: Array.from({ length: 4 }).map(
         () =>
           new StarFall(Math.random() * (window.innerWidth - 10 * 2) + 10, -100)
       ),
       cometArray: Array.from({ length: 1 }).map(
         () => new Comet(Math.random() * (window.innerWidth - 10 * 2) + 10, -100)
       ),
+      pointCounter: 0,
     }
   }
 
   componentDidMount() {
-    setInterval(() => {
+    const stars = setInterval(() => {
       this.state.starArray.push(
         new Star(
           Math.random() * (window.innerWidth - 10 * 2) + 10,
@@ -138,10 +147,21 @@ class Canvas2 extends React.Component {
           2,
           "white"
         )
+      )
+      this.state.starFallArray.push(
+        new StarFall(Math.random() * (window.innerWidth - 10 * 2) + 10, -100)
       )
     }, 100)
 
-    setInterval(() => {
+    const fall = setInterval(() => {
+      this.state.starArray.push(
+        new Star(
+          Math.random() * (window.innerWidth - 10 * 2) + 10,
+          0,
+          2,
+          "white"
+        )
+      )
       this.state.starFallArray.push(
         new StarFall(Math.random() * (window.innerWidth - 10 * 2) + 10, -100)
       )
@@ -150,28 +170,39 @@ class Canvas2 extends React.Component {
       )
     }, 300)
 
-    setInterval(() => {
+    const comets = setInterval(() => {
       this.state.cometArray.push(
         new Comet(Math.random() * (window.innerWidth - 10 * 2) + 10, -100)
       )
-    }, 500)
+      this.state.cometArray.push(
+        new Comet(Math.random() * (window.innerWidth - 10 * 2) + 10, -100)
+      )
+    }, 400)
 
-    this.updateCanvas()
+    const points = setInterval(() => {
+      this.setState({ pointCounter: (this.state.pointCounter += 10) })
+    }, 1000)
+
+    this.updateCanvas(stars, fall, comets, points)
   }
 
   componentDidUpdate() {
     this.updateCanvas()
   }
 
-  updateCanvas() {
+  updateCanvas(stars, fall, comets, points) {
     const animate = () => {
-      if(this.state.gameover) {
-        return;
+      if (this.state.gameover) {
+        clearInterval(stars)
+        clearInterval(fall)
+        clearInterval(comets)
+        clearInterval(points)
+        return
       }
- 
+
       const ctx = this.refs.canvas.getContext("2d")
       requestAnimationFrame(animate)
- 
+
       ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
 
       ctx.font = "10vw Arial"
@@ -181,6 +212,15 @@ class Canvas2 extends React.Component {
         "SPACE EXPLORER",
         this.refs.canvas.width / 2,
         this.refs.canvas.height / 2
+      )
+
+      ctx.font = "2vw Arial"
+      ctx.strokeStyle = "white"
+      ctx.textAlign = "center"
+      ctx.strokeText(
+        "POINTS:" + this.state.pointCounter,
+        this.refs.canvas.width / 6,
+        this.refs.canvas.height / 8
       )
 
       const image = document.getElementById("source")
@@ -197,8 +237,8 @@ class Canvas2 extends React.Component {
       this.state.cometArray.forEach(element => {
         preShake(ctx)
         element.cometFall(comet, ctx)
-        if(element.hitsShip()) {
-          this.setState({gameover: true})
+        if (element.hitsShip()) {
+          this.setState({ gameover: true })
         }
         postShake(ctx)
       })
@@ -212,8 +252,52 @@ class Canvas2 extends React.Component {
   }
 
   render() {
-    if(this.state.gameover) {
-      return <h1>Game over... bith=ch!</h1>
+    if (this.state.gameover) {
+      return (
+        <div
+          style={{
+            background: `black`,
+            color: `white`,
+          }}
+        >
+          <h1
+            style={{
+              fontFamily: `Arial`,
+              fontSize: `3em`,
+              textAlign: `center`,
+              paddingTop: `4em`,
+            }}
+          >
+            GAME OVER{" "}
+          </h1>{" "}
+          <br />
+          <h1
+            style={{
+              fontFamily: `Arial`,
+              fontSize: `2em`,
+              textAlign: `center`,
+              paddingTop: `1em`,
+            }}
+          >
+            POINTS EARNED: {this.state.pointCounter}
+          </h1>
+          <div
+            style={{
+              width: `100%`,
+              height: `0`,
+              paddingBottom: `39%`,
+              position: `relative`,
+              textAlign: `center`,
+            }}
+          >
+            <img
+              src={"https://media.giphy.com/media/7FglzG1vIz4sYjEq5L/giphy.gif"}
+              style={{ position: `absolute`, margin: `0 auto`, width: `20%` }}
+              alt={"alien"}
+            />
+          </div>
+        </div>
+      )
     }
     return (
       <div>
