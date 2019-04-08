@@ -163,18 +163,14 @@ class Canvas2 extends React.Component {
         )
       )
       this.state.starFallArray.push(
-        new StarFall(Math.random() * (window.innerWidth - 10 * 2) + 10, -100)
-      )
-      this.state.starFallArray.push(
+        new StarFall(Math.random() * (window.innerWidth - 10 * 2) + 10, -100),
         new StarFall(Math.random() * (window.innerWidth - 10 * 2) + 10, -100)
       )
     }, 300)
 
     const comets = setInterval(() => {
       this.state.cometArray.push(
-        new Comet(Math.random() * (window.innerWidth - 10 * 2) + 10, -100)
-      )
-      this.state.cometArray.push(
+        new Comet(Math.random() * (window.innerWidth - 10 * 2) + 10, -100),
         new Comet(Math.random() * (window.innerWidth - 10 * 2) + 10, -100)
       )
     }, 400)
