@@ -21,7 +21,7 @@ class DragUfo {
   }
 }
 
-const maxRadius = 20
+const maxRadius = 40
 
 class Circle {
   constructor(x, y, dx, dy, radius, color) {
@@ -30,7 +30,7 @@ class Circle {
     const draw = ctx => {
       ctx.beginPath()
       ctx.arc(x, y, radius, Math.PI * 2, false)
-      ctx.shadowBlur = 30
+      ctx.shadowBlur = 40
       ctx.shadowColor = "white"
       ctx.fillStyle = color
       ctx.fill()
@@ -96,14 +96,14 @@ class Canvas extends React.Component {
     window.addEventListener("mousemove", this.onMouseMove)
 
     this.setState({
-      circleArray: Array.from({ length: 1800 }).map(
+      circleArray: Array.from({ length: 1200 }).map(
         () =>
           new Circle(
             Math.random() * (window.innerWidth - 10 * 2) + 10,
             Math.random() * (window.innerHeight - 10 * 2) + 10,
             Math.random() - 0.5,
             Math.random() - 0.5,
-            Math.random() * 2 + 1,
+            Math.random() * 3 + 1,
             colorArray[Math.floor(Math.random() * colorArray.length)]
           )
       ),
