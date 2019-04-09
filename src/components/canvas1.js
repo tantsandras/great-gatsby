@@ -92,7 +92,6 @@ class Canvas extends React.Component {
   }
 
   componentDidMount() {
-    this.refs.canvas.style.background = `url('${Background}') no-repeat center center fixed`
 
     window.addEventListener("mousemove", this.onMouseMove)
 
@@ -162,6 +161,7 @@ class Canvas extends React.Component {
           width={this.state.width}
           height={this.state.height}
           ref="canvas"
+          style={{background: `url('${Background}') no-repeat center center fixed`}}
         />
         <div style={{ display: `none` }}>
           <img id={"source"} src={ufo} alt={"ufo"} />
